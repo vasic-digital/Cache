@@ -245,3 +245,19 @@ func TestTypedCache_SetMarshalError(t *testing.T) {
 	require.NoError(t, json.Unmarshal(raw, &decoded))
 	assert.Equal(t, "test", decoded.Name)
 }
+
+// unmarshalableType is a type that cannot be marshaled to JSON
+type unmarshalableType struct {
+	Ch chan int `json:"ch"`
+}
+
+func TestTypedCache_SetMarshalErrorPath(t *testing.T) {
+	stub := newStubCache()
+	tc := NewTypedCache[unmarshalableType](stub)
+	ctx := context.Background()
+
+	// Channels cannot be marshaled to JSON
+	err := tc.Set(ctx, "key", unmarshalableType{Ch: make(chan int)}, time.Minute)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "typed cache marshal")
+}

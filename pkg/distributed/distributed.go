@@ -23,7 +23,7 @@ import (
 // improve distribution uniformity.
 type ConsistentHash struct {
 	mu       sync.RWMutex
-	ring     []uint32         // sorted hash values
+	ring     []uint32          // sorted hash values
 	nodes    map[uint32]string // hash -> node name
 	replicas int
 }

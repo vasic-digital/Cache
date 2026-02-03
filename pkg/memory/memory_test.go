@@ -386,3 +386,39 @@ func TestFormatSize(t *testing.T) {
 
 // Interface compliance
 var _ cache.Cache = (*Cache)(nil)
+
+func TestCache_EvictLRU_EmptyList(t *testing.T) {
+	// Create cache and directly call evict without any entries
+	c := New(&Config{
+		MaxEntries:      1,
+		EvictionPolicy:  cache.LRU,
+		CleanupInterval: 0,
+	})
+	defer c.Close()
+
+	// Directly trigger evict on empty cache to cover the nil check
+	c.mu.Lock()
+	c.evictLRU()
+	c.mu.Unlock()
+
+	// Should not panic and evictions should remain 0
+	assert.Equal(t, int64(0), c.Stats().Evictions)
+}
+
+func TestCache_EvictFIFO_EmptyList(t *testing.T) {
+	// Create cache and directly call evict without any entries
+	c := New(&Config{
+		MaxEntries:      1,
+		EvictionPolicy:  cache.FIFO,
+		CleanupInterval: 0,
+	})
+	defer c.Close()
+
+	// Directly trigger evict on empty cache to cover the nil check
+	c.mu.Lock()
+	c.evictFIFO()
+	c.mu.Unlock()
+
+	// Should not panic and evictions should remain 0
+	assert.Equal(t, int64(0), c.Stats().Evictions)
+}

@@ -137,6 +137,21 @@ func TestAdaptiveTTL_Reset(t *testing.T) {
 	assert.Equal(t, time.Minute, a.GetTTL("key"))
 }
 
+func TestAdaptiveTTL_GetTTL_ZeroCount(t *testing.T) {
+	// Test the case where accessCounts has an entry but the count is 0 or negative
+	a := NewAdaptiveTTL(time.Minute, time.Hour)
+	// RecordAccess then manually set count to 0 to test branch
+	a.RecordAccess("key")
+	// Get the stored pointer and set it to 0
+	val, _ := a.accessCounts.Load("key")
+	ptr := val.(*int64)
+	*ptr = 0
+
+	// Now GetTTL should return MinTTL because count <= 0
+	ttl := a.GetTTL("key")
+	assert.Equal(t, time.Minute, ttl)
+}
+
 // --- CapacityEviction tests ---
 
 func TestCapacityEviction_ShouldEvict(t *testing.T) {

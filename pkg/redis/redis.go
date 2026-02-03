@@ -167,10 +167,20 @@ func NewCluster(cfg *ClusterConfig) *ClusterClient {
 	return &ClusterClient{rdb: rdb}
 }
 
+// clusterCmdable abstracts the Redis cluster command interface for testing.
+type clusterCmdable interface {
+	Get(ctx context.Context, key string) *redis.StringCmd
+	Set(ctx context.Context, key string, value interface{}, expiration time.Duration) *redis.StatusCmd
+	Del(ctx context.Context, keys ...string) *redis.IntCmd
+	Exists(ctx context.Context, keys ...string) *redis.IntCmd
+	Ping(ctx context.Context) *redis.StatusCmd
+	Close() error
+}
+
 // ClusterClient implements the cache.Cache interface using a Redis
 // Cluster via go-redis/v9.
 type ClusterClient struct {
-	rdb *redis.ClusterClient
+	rdb clusterCmdable
 }
 
 // Get retrieves a value from the Redis Cluster.
