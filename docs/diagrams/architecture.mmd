@@ -1,0 +1,85 @@
+graph TD
+    subgraph "digital.vasic.cache"
+
+        subgraph "pkg/cache"
+            CacheInterface["Cache (interface)"]
+            TypedCache["TypedCache[T]"]
+            Config["Config"]
+            Stats["Stats"]
+            EvictionPolicy["EvictionPolicy (enum)"]
+        end
+
+        subgraph "pkg/redis"
+            RedisClient["Client"]
+            RedisClusterClient["ClusterClient"]
+            RedisConfig["Config"]
+            RedisClusterConfig["ClusterConfig"]
+        end
+
+        subgraph "pkg/memory"
+            MemoryCache["Cache"]
+            MemoryConfig["Config"]
+        end
+
+        subgraph "pkg/distributed"
+            ConsistentHash["ConsistentHash"]
+            TwoLevel["TwoLevel"]
+            StrategyInterface["Strategy (interface)"]
+            DataSourceInterface["DataSource (interface)"]
+            WriteThrough["WriteThrough"]
+            WriteBack["WriteBack"]
+            CacheAside["CacheAside"]
+        end
+
+        subgraph "pkg/policy"
+            TTLPolicyInterface["TTLPolicy (interface)"]
+            FixedTTL["FixedTTL"]
+            SlidingTTL["SlidingTTL"]
+            AdaptiveTTL["AdaptiveTTL"]
+            EvictionDeciderInterface["EvictionDecider (interface)"]
+            CapacityEviction["CapacityEviction"]
+            AgeEviction["AgeEviction"]
+            FrequencyEviction["FrequencyEviction"]
+            CompositeEviction["CompositeEviction"]
+        end
+
+    end
+
+    %% Interface implementations
+    RedisClient -->|implements| CacheInterface
+    RedisClusterClient -->|implements| CacheInterface
+    MemoryCache -->|implements| CacheInterface
+    TwoLevel -->|implements| CacheInterface
+
+    %% Strategy implementations
+    WriteThrough -->|implements| StrategyInterface
+    WriteBack -->|implements| StrategyInterface
+    CacheAside -->|implements| StrategyInterface
+
+    %% TTL policy implementations
+    FixedTTL -->|implements| TTLPolicyInterface
+    SlidingTTL -->|implements| TTLPolicyInterface
+    AdaptiveTTL -->|implements| TTLPolicyInterface
+
+    %% Eviction decider implementations
+    CapacityEviction -->|implements| EvictionDeciderInterface
+    AgeEviction -->|implements| EvictionDeciderInterface
+    FrequencyEviction -->|implements| EvictionDeciderInterface
+    CompositeEviction -->|implements| EvictionDeciderInterface
+
+    %% Composition relationships
+    TypedCache -->|wraps| CacheInterface
+    TwoLevel -->|composes 2x| CacheInterface
+    WriteThrough -->|uses| CacheInterface
+    WriteThrough -->|uses| DataSourceInterface
+    WriteBack -->|uses| CacheInterface
+    WriteBack -->|uses| DataSourceInterface
+    CacheAside -->|uses| CacheInterface
+    CacheAside -->|uses| DataSourceInterface
+    CompositeEviction -->|composes N x| EvictionDeciderInterface
+    MemoryCache -->|uses| EvictionPolicy
+
+    %% External dependency
+    GoRedis["go-redis/v9"]
+    RedisClient -->|wraps| GoRedis
+    RedisClusterClient -->|wraps| GoRedis

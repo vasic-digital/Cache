@@ -1,0 +1,233 @@
+classDiagram
+    class Cache {
+        <<interface>>
+        +Get(ctx Context, key string) ([]byte, error)
+        +Set(ctx Context, key string, value []byte, ttl Duration) error
+        +Delete(ctx Context, key string) error
+        +Exists(ctx Context, key string) (bool, error)
+        +Close() error
+    }
+
+    class TypedCache~T~ {
+        -inner Cache
+        +Get(ctx Context, key string) (T, bool, error)
+        +Set(ctx Context, key string, value T, ttl Duration) error
+        +Delete(ctx Context, key string) error
+        +Exists(ctx Context, key string) (bool, error)
+        +Close() error
+    }
+
+    class EvictionPolicy {
+        <<enumeration>>
+        LRU
+        LFU
+        FIFO
+        +String() string
+    }
+
+    class Config {
+        +DefaultTTL Duration
+        +MaxSize int
+        +EvictionPolicy EvictionPolicy
+    }
+
+    class Stats {
+        +Hits int64
+        +Misses int64
+        +Evictions int64
+        +Size int64
+        +HitRate() float64
+    }
+
+    class RedisClient {
+        -rdb *redis.Client
+        +Get(ctx Context, key string) ([]byte, error)
+        +Set(ctx Context, key string, value []byte, ttl Duration) error
+        +Delete(ctx Context, key string) error
+        +Exists(ctx Context, key string) (bool, error)
+        +Close() error
+        +HealthCheck(ctx Context) error
+        +Underlying() *redis.Client
+    }
+
+    class RedisClusterClient {
+        -rdb *redis.ClusterClient
+        +Get(ctx Context, key string) ([]byte, error)
+        +Set(ctx Context, key string, value []byte, ttl Duration) error
+        +Delete(ctx Context, key string) error
+        +Exists(ctx Context, key string) (bool, error)
+        +Close() error
+        +HealthCheck(ctx Context) error
+    }
+
+    class MemoryCache {
+        -entries map~string, *entry~
+        -evictList *list.List
+        -config *MemoryConfig
+        +Get(ctx Context, key string) ([]byte, error)
+        +Set(ctx Context, key string, value []byte, ttl Duration) error
+        +Delete(ctx Context, key string) error
+        +Exists(ctx Context, key string) (bool, error)
+        +Close() error
+        +Stats() *Stats
+        +Len() int
+        +MemoryUsed() int64
+        +Flush()
+    }
+
+    class ConsistentHash {
+        -ring []uint32
+        -nodes map~uint32, string~
+        -replicas int
+        +AddNode(node string)
+        +RemoveNode(node string)
+        +GetNode(key string) string
+        +NodeCount() int
+    }
+
+    class TwoLevel {
+        -local Cache
+        -remote Cache
+        -l1TTL Duration
+        +Get(ctx Context, key string) ([]byte, error)
+        +Set(ctx Context, key string, value []byte, ttl Duration) error
+        +Delete(ctx Context, key string) error
+        +Exists(ctx Context, key string) (bool, error)
+        +Close() error
+    }
+
+    class Strategy {
+        <<interface>>
+        +Name() string
+        +Get(ctx Context, key string) ([]byte, error)
+        +Set(ctx Context, key string, value []byte, ttl Duration) error
+        +Delete(ctx Context, key string) error
+    }
+
+    class DataSource {
+        <<interface>>
+        +Load(ctx Context, key string) ([]byte, error)
+        +Store(ctx Context, key string, value []byte) error
+        +Remove(ctx Context, key string) error
+    }
+
+    class WriteThrough {
+        -c Cache
+        -src DataSource
+        +Name() string
+        +Get(ctx Context, key string) ([]byte, error)
+        +Set(ctx Context, key string, value []byte, ttl Duration) error
+        +Delete(ctx Context, key string) error
+    }
+
+    class WriteBack {
+        -c Cache
+        -src DataSource
+        -dirty map~string, []byte~
+        +Name() string
+        +Get(ctx Context, key string) ([]byte, error)
+        +Set(ctx Context, key string, value []byte, ttl Duration) error
+        +Delete(ctx Context, key string) error
+        +Flush(ctx Context) error
+        +DirtyCount() int
+    }
+
+    class CacheAside {
+        -c Cache
+        -src DataSource
+        +Name() string
+        +Get(ctx Context, key string) ([]byte, error)
+        +Set(ctx Context, key string, value []byte, ttl Duration) error
+        +Delete(ctx Context, key string) error
+    }
+
+    class TTLPolicy {
+        <<interface>>
+        +GetTTL(key string) Duration
+    }
+
+    class FixedTTL {
+        +Duration Duration
+        +GetTTL(key string) Duration
+    }
+
+    class SlidingTTL {
+        +BaseTTL Duration
+        +GetTTL(key string) Duration
+        +Touch(key string)
+        +ShouldExpire(key string) bool
+        +Remove(key string)
+    }
+
+    class AdaptiveTTL {
+        +MinTTL Duration
+        +MaxTTL Duration
+        +GetTTL(key string) Duration
+        +RecordAccess(key string)
+        +Reset(key string)
+        +AccessCount(key string) int64
+    }
+
+    class EvictionDecider {
+        <<interface>>
+        +ShouldEvict(key string, stats EvictionStats) bool
+    }
+
+    class EvictionStats {
+        +TotalEntries int
+        +MaxEntries int
+        +MemoryUsed int64
+        +MaxMemory int64
+        +EntryAge Duration
+        +EntryAccessCount int64
+        +EntryLastAccess Time
+    }
+
+    class CapacityEviction {
+        +Threshold float64
+        +ShouldEvict(key string, stats EvictionStats) bool
+    }
+
+    class AgeEviction {
+        +MaxAge Duration
+        +ShouldEvict(key string, stats EvictionStats) bool
+    }
+
+    class FrequencyEviction {
+        +MinAccesses int64
+        +ShouldEvict(key string, stats EvictionStats) bool
+    }
+
+    class CompositeEviction {
+        -policies []EvictionDecider
+        +ShouldEvict(key string, stats EvictionStats) bool
+    }
+
+    Cache <|.. RedisClient
+    Cache <|.. RedisClusterClient
+    Cache <|.. MemoryCache
+    Cache <|.. TwoLevel
+    TypedCache~T~ --> Cache : wraps
+
+    Strategy <|.. WriteThrough
+    Strategy <|.. WriteBack
+    Strategy <|.. CacheAside
+    WriteThrough --> Cache
+    WriteThrough --> DataSource
+    WriteBack --> Cache
+    WriteBack --> DataSource
+    CacheAside --> Cache
+    CacheAside --> DataSource
+
+    TwoLevel --> Cache : local
+    TwoLevel --> Cache : remote
+
+    TTLPolicy <|.. FixedTTL
+    TTLPolicy <|.. SlidingTTL
+    TTLPolicy <|.. AdaptiveTTL
+
+    EvictionDecider <|.. CapacityEviction
+    EvictionDecider <|.. AgeEviction
+    EvictionDecider <|.. FrequencyEviction
+    EvictionDecider <|.. CompositeEviction
+    CompositeEviction --> EvictionDecider : composes N

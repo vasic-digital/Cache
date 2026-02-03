@@ -1,0 +1,37 @@
+sequenceDiagram
+    participant App as Application
+    participant CA as CacheAside
+    participant C as Cache
+    participant DS as DataSource
+
+    Note over App, DS: Cache-Aside Read Path (Cache Hit)
+    App->>CA: Get(ctx, "user:1")
+    CA->>C: Get(ctx, "user:1")
+    C-->>CA: []byte("data"), nil
+    CA-->>App: []byte("data"), nil
+
+    Note over App, DS: Cache-Aside Read Path (Cache Miss)
+    App->>CA: Get(ctx, "user:2")
+    CA->>C: Get(ctx, "user:2")
+    C-->>CA: nil, nil
+    CA->>DS: Load(ctx, "user:2")
+    DS-->>CA: []byte("data"), nil
+    CA->>C: Set(ctx, "user:2", data, 0)
+    C-->>CA: nil
+    CA-->>App: []byte("data"), nil
+
+    Note over App, DS: Cache-Aside Write Path (Invalidation)
+    App->>CA: Set(ctx, "user:1", newData, 0)
+    CA->>DS: Store(ctx, "user:1", newData)
+    DS-->>CA: nil
+    CA->>C: Delete(ctx, "user:1")
+    C-->>CA: nil
+    CA-->>App: nil
+
+    Note over App, DS: Cache-Aside Delete Path
+    App->>CA: Delete(ctx, "user:1")
+    CA->>DS: Remove(ctx, "user:1")
+    DS-->>CA: nil
+    CA->>C: Delete(ctx, "user:1")
+    C-->>CA: nil
+    CA-->>App: nil
