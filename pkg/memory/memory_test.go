@@ -271,7 +271,7 @@ func TestCache_Stats(t *testing.T) {
 
 	c.Set(ctx, "k", []byte("v"), time.Minute)
 	c.Get(ctx, "k")       // hit
-	c.Get(ctx, "missing")  // miss
+	c.Get(ctx, "missing") // miss
 
 	stats := c.Stats()
 	assert.Equal(t, int64(1), stats.Hits)

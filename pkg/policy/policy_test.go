@@ -247,7 +247,7 @@ func TestCompositeEviction_ShouldEvict(t *testing.T) {
 		expected bool
 	}{
 		{
-			name: "no policies -> no eviction",
+			name:     "no policies -> no eviction",
 			expected: false,
 		},
 		{
@@ -273,9 +273,9 @@ func TestCompositeEviction_ShouldEvict(t *testing.T) {
 		{
 			name: "one of many says yes -> evict",
 			policies: []EvictionDecider{
-				NewAgeEviction(time.Hour),             // no
-				NewFrequencyEviction(5),               // yes (count=0)
-				NewCapacityEviction(0.9),              // no
+				NewAgeEviction(time.Hour), // no
+				NewFrequencyEviction(5),   // yes (count=0)
+				NewCapacityEviction(0.9),  // no
 			},
 			stats: EvictionStats{
 				EntryAge:         30 * time.Minute,
