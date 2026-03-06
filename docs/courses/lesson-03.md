@@ -99,6 +99,8 @@ stats := wrapper.GetStats()
 fmt.Printf("Hits: %d, Misses: %d, Errors: %d\n", stats.Hits, stats.Misses, stats.Errors)
 ```
 
-## Summary
+## Practice Exercise
 
-TTL policies and eviction deciders give fine-grained control over cache entry lifetime. The service wrapper encapsulates the cache-aside pattern, keeping caching logic out of business code while providing visibility through statistics.
+1. Create an `AdaptiveTTL` with min=1min, max=30min. Record 0, 50, and 100 accesses for three different keys. Verify the TTL scales linearly between min and max.
+2. Build a `CompositeEviction` with capacity (80%) and age (1 hour) deciders. Verify that entries are evicted when either condition is met (OR logic).
+3. Use the service `Wrapper` with `GetOrLoad`. Call `GetOrLoad` three times for the same key. Verify the loader function is called only once (cache hit on subsequent calls) and `Stats.Hits` equals 2.

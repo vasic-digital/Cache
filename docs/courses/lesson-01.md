@@ -65,6 +65,8 @@ The `cleanupLoop` goroutine runs every `CleanupInterval` and removes all expired
 c.Flush() // removes everything, resets memory counter
 ```
 
-## Summary
+## Practice Exercise
 
-The `Cache` interface provides a clean abstraction for any backend. The in-memory implementation offers configurable eviction, memory limits, and automatic cleanup, making it suitable for both development and production single-instance deployments.
+1. Create an in-memory cache with `MaxEntries=3` and LRU eviction. Set 4 entries and verify the first entry was evicted. Access the second entry, set a fifth, and verify the third (least recently used) was evicted instead.
+2. Use `TypedCache[User]` to store and retrieve a struct. Verify JSON serialization round-trips correctly, including nested fields and nil values.
+3. Configure a cache with `MaxMemoryBytes=1024` and `CleanupInterval=100ms`. Set entries that exceed the memory limit and verify eviction occurs. Wait 200ms with expired entries and verify background cleanup removes them.

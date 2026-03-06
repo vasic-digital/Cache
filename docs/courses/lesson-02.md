@@ -75,6 +75,8 @@ fmt.Println(wb.DirtyCount()) // 1
 wb.Flush(ctx)                // persists all dirty entries
 ```
 
-## Summary
+## Practice Exercise
 
-Redis provides shared, persistent caching for multi-instance deployments. Consistent hashing distributes load evenly. Two-level caching and write strategies let you balance between latency, consistency, and throughput.
+1. Create a consistent hash ring with 3 nodes and 100 replicas. Map 1000 keys and count the distribution per node. Verify each node gets approximately 333 keys (within 10% variance).
+2. Set up a `TwoLevel` cache with an in-memory L1 and a mock L2. Set a key in L2 only, then get it through `TwoLevel`. Verify the key is promoted to L1 on the next access.
+3. Implement a `DataSource` interface and use `WriteBack`. Set 5 keys, verify `DirtyCount()` is 5, then call `Flush()` and verify the data source received all 5 writes and `DirtyCount()` is 0.
