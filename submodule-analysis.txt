@@ -1,0 +1,8 @@
+Commit: d3286ebd098e98e6b725804121534aea629eedea
+Branch: main
+d3286eb MANDATORY: Add ZERO UNFINISHED WORK POLICY to AGENTS.md
+0f629ce Add GitHub Sponsors button for vasic-digital
+f79baa9 security: Add mandatory NO SUDO/ROOT execution constraint
+03c0622 feat: v2.2.0 comprehensive completion — edge tests, version alignment
+6d69fed docs: add ARCHITECTURE.md, .env gitignore for v2.1.0
+
