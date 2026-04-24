@@ -10,15 +10,12 @@ same session as the change.** Coverage and green suites are not evidence.
 
 ### Acceptance demo for this module
 
-<!-- TODO: replace this block with the exact command(s) that exercise this
-     module end-to-end against real dependencies, and the expected output.
-     The commands must run the real artifact (built binary, deployed
-     container, real service) — no in-process fakes, no mocks, no
-     `httptest.NewServer`, no Robolectric, no JSDOM as proof of done. -->
-
 ```bash
-# TODO
+# TTL + LRU eviction + concurrency safety on in-memory + Redis backends
+cd Cache && GOMAXPROCS=2 nice -n 19 go test -count=1 -race -v ./tests/integration/...
 ```
+Expect: PASS; exercises `memory.New`, `redis.New`, `distributed.NewTwoLevel`, and the `service` layer (cache-aside, read-through) per `Cache/README.md`. For live Redis set `REDIS_ADDR=localhost:6379`.
+
 
 ## Overview
 
