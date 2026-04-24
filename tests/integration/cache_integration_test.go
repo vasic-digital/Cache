@@ -18,7 +18,7 @@ import (
 
 func TestMemoryCache_SetGetDelete_Integration(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping integration test in short mode")
+		t.Skip("skipping integration test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	cfg := &memory.Config{
@@ -76,7 +76,7 @@ func TestMemoryCache_SetGetDelete_Integration(t *testing.T) {
 
 func TestTwoLevel_Integration(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping integration test in short mode")
+		t.Skip("skipping integration test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	l1Cfg := &memory.Config{
@@ -137,7 +137,7 @@ func TestTwoLevel_Integration(t *testing.T) {
 
 func TestWriteThrough_Integration(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping integration test in short mode")
+		t.Skip("skipping integration test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	c := memory.New(memory.DefaultConfig())
@@ -172,7 +172,7 @@ func TestWriteThrough_Integration(t *testing.T) {
 
 func TestTypedCache_Integration(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping integration test in short mode")
+		t.Skip("skipping integration test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	type User struct {
@@ -210,7 +210,7 @@ func TestTypedCache_Integration(t *testing.T) {
 
 func TestAdaptiveTTL_Integration(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping integration test in short mode")
+		t.Skip("skipping integration test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	adaptive := policy.NewAdaptiveTTL(time.Second, 10*time.Second)

@@ -18,7 +18,7 @@ import (
 
 func TestEndToEnd_FullCacheLifecycle(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping e2e test in short mode")
+		t.Skip("skipping e2e test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	cfg := &memory.Config{
@@ -83,7 +83,7 @@ func TestEndToEnd_FullCacheLifecycle(t *testing.T) {
 
 func TestEndToEnd_TTLExpiration(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping e2e test in short mode")
+		t.Skip("skipping e2e test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	cfg := &memory.Config{
@@ -117,7 +117,7 @@ func TestEndToEnd_TTLExpiration(t *testing.T) {
 
 func TestEndToEnd_EvictionPolicy(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping e2e test in short mode")
+		t.Skip("skipping e2e test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	cfg := &memory.Config{
@@ -150,7 +150,7 @@ func TestEndToEnd_EvictionPolicy(t *testing.T) {
 
 func TestEndToEnd_TwoLevelWithExpiry(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping e2e test in short mode")
+		t.Skip("skipping e2e test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	l1 := memory.New(&memory.Config{
@@ -200,7 +200,7 @@ func TestEndToEnd_TwoLevelWithExpiry(t *testing.T) {
 
 func TestEndToEnd_ConsistentHashDistribution(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping e2e test in short mode")
+		t.Skip("skipping e2e test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	ch := distributed.NewConsistentHash(150)
@@ -239,7 +239,7 @@ func TestEndToEnd_ConsistentHashDistribution(t *testing.T) {
 
 func TestEndToEnd_PolicyComposition(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping e2e test in short mode")
+		t.Skip("skipping e2e test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	age := policy.NewAgeEviction(time.Hour)
@@ -269,7 +269,7 @@ func TestEndToEnd_PolicyComposition(t *testing.T) {
 
 func TestEndToEnd_WriteBackFlush(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping e2e test in short mode")
+		t.Skip("skipping e2e test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	c := memory.New(memory.DefaultConfig())
