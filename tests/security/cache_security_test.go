@@ -17,7 +17,7 @@ import (
 
 func TestSecurity_EmptyKey(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping security test in short mode")
+		t.Skip("skipping security test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	c := memory.New(memory.DefaultConfig())
@@ -39,7 +39,7 @@ func TestSecurity_EmptyKey(t *testing.T) {
 
 func TestSecurity_NilValueHandling(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping security test in short mode")
+		t.Skip("skipping security test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	c := memory.New(memory.DefaultConfig())
@@ -66,7 +66,7 @@ func TestSecurity_NilValueHandling(t *testing.T) {
 
 func TestSecurity_LargeKeyInjection(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping security test in short mode")
+		t.Skip("skipping security test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	c := memory.New(memory.DefaultConfig())
@@ -86,7 +86,7 @@ func TestSecurity_LargeKeyInjection(t *testing.T) {
 
 func TestSecurity_SpecialCharacterKeys(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping security test in short mode")
+		t.Skip("skipping security test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	c := memory.New(memory.DefaultConfig())
@@ -118,7 +118,7 @@ func TestSecurity_SpecialCharacterKeys(t *testing.T) {
 
 func TestSecurity_LargeValueHandling(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping security test in short mode")
+		t.Skip("skipping security test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	c := memory.New(&memory.Config{
@@ -148,7 +148,7 @@ func TestSecurity_LargeValueHandling(t *testing.T) {
 
 func TestSecurity_ConsistentHash_EmptyRing(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping security test in short mode")
+		t.Skip("skipping security test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	ch := distributed.NewConsistentHash(100)
@@ -170,7 +170,7 @@ func TestSecurity_ConsistentHash_EmptyRing(t *testing.T) {
 
 func TestSecurity_NegativeReplicaCount(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping security test in short mode")
+		t.Skip("skipping security test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	// Negative replicas should default to a positive value
@@ -182,7 +182,7 @@ func TestSecurity_NegativeReplicaCount(t *testing.T) {
 
 func TestSecurity_TypedCache_InvalidJSON(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping security test in short mode")
+		t.Skip("skipping security test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	type User struct {
@@ -207,7 +207,7 @@ func TestSecurity_TypedCache_InvalidJSON(t *testing.T) {
 
 func TestSecurity_PolicyNilSafety(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping security test in short mode")
+		t.Skip("skipping security test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	// AdaptiveTTL with reversed min/max should auto-correct

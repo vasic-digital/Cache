@@ -19,7 +19,7 @@ import (
 
 func TestStress_ConcurrentSetGet(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping stress test in short mode")
+		t.Skip("skipping stress test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	c := memory.New(&memory.Config{
@@ -71,7 +71,7 @@ func TestStress_ConcurrentSetGet(t *testing.T) {
 
 func TestStress_ConcurrentEviction(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping stress test in short mode")
+		t.Skip("skipping stress test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	c := memory.New(&memory.Config{
@@ -107,7 +107,7 @@ func TestStress_ConcurrentEviction(t *testing.T) {
 
 func TestStress_ConcurrentTwoLevel(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping stress test in short mode")
+		t.Skip("skipping stress test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	l1 := memory.New(&memory.Config{
@@ -161,7 +161,7 @@ func TestStress_ConcurrentTwoLevel(t *testing.T) {
 
 func TestStress_ConcurrentConsistentHash(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping stress test in short mode")
+		t.Skip("skipping stress test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	ch := distributed.NewConsistentHash(100)
@@ -191,7 +191,7 @@ func TestStress_ConcurrentConsistentHash(t *testing.T) {
 
 func TestStress_ConcurrentAdaptiveTTL(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping stress test in short mode")
+		t.Skip("skipping stress test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	adaptive := policy.NewAdaptiveTTL(time.Second, 10*time.Second)
@@ -219,7 +219,7 @@ func TestStress_ConcurrentAdaptiveTTL(t *testing.T) {
 
 func TestStress_ConcurrentWriteBack(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping stress test in short mode")
+		t.Skip("skipping stress test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	c := memory.New(memory.DefaultConfig())
@@ -256,7 +256,7 @@ func TestStress_ConcurrentWriteBack(t *testing.T) {
 
 func TestStress_MemoryPressure(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping stress test in short mode")
+		t.Skip("skipping stress test in short mode")  // SKIP-OK: #short-mode
 	}
 
 	c := memory.New(&memory.Config{

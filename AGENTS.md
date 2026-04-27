@@ -153,3 +153,93 @@ Cache/
       sequence.mmd
       class.mmd
 ```
+
+
+## ⚠️ MANDATORY: NO SUDO OR ROOT EXECUTION
+
+**ALL operations MUST run at local user level ONLY.**
+
+This is a PERMANENT and NON-NEGOTIABLE security constraint:
+
+- **NEVER** use `sudo` in ANY command
+- **NEVER** use `su` in ANY command
+- **NEVER** execute operations as `root` user
+- **NEVER** elevate privileges for file operations
+- **ALL** infrastructure commands MUST use user-level container runtimes (rootless podman/docker)
+- **ALL** file operations MUST be within user-accessible directories
+- **ALL** service management MUST be done via user systemd or local process management
+- **ALL** builds, tests, and deployments MUST run as the current user
+
+### Container-Based Solutions
+When a build or runtime environment requires system-level dependencies, use containers instead of elevation:
+
+- **Use the `Containers` submodule** (`https://github.com/vasic-digital/Containers`) for containerized build and runtime environments
+- **Add the `Containers` submodule as a Git dependency** and configure it for local use within the project
+- **Build and run inside containers** to avoid any need for privilege escalation
+- **Rootless Podman/Docker** is the preferred container runtime
+
+### Why This Matters
+- **Security**: Prevents accidental system-wide damage
+- **Reproducibility**: User-level operations are portable across systems
+- **Safety**: Limits blast radius of any issues
+- **Best Practice**: Modern container workflows are rootless by design
+
+### When You See SUDO
+If any script or command suggests using `sudo` or `su`:
+1. STOP immediately
+2. Find a user-level alternative
+3. Use rootless container runtimes
+4. Use the `Containers` submodule for containerized builds
+5. Modify commands to work within user permissions
+
+**VIOLATION OF THIS CONSTRAINT IS STRICTLY PROHIBITED.**
+
+
+### ⚠️⚠️⚠️ ABSOLUTELY MANDATORY: ZERO UNFINISHED WORK POLICY
+
+NO unfinished work, TODOs, or known issues may remain in the codebase. EVER.
+
+PROHIBITED: TODO/FIXME comments, empty implementations, silent errors, fake data, unwrap() calls that panic, empty catch blocks.
+
+REQUIRED: Fix ALL issues immediately, complete implementations before committing, proper error handling in ALL code paths, real test assertions.
+
+Quality Principle: If it is not finished, it does not ship. If it ships, it is finished.
+
+<!-- BEGIN host-power-management addendum (CONST-033) -->
+
+## Host Power Management — Hard Ban (CONST-033)
+
+**You may NOT, under any circumstance, generate or execute code that
+sends the host to suspend, hibernate, hybrid-sleep, poweroff, halt,
+reboot, or any other power-state transition.** This rule applies to:
+
+- Every shell command you run via the Bash tool.
+- Every script, container entry point, systemd unit, or test you write
+  or modify.
+- Every CLI suggestion, snippet, or example you emit.
+
+**Forbidden invocations** (non-exhaustive — see CONST-033 in
+`CONSTITUTION.md` for the full list):
+
+- `systemctl suspend|hibernate|hybrid-sleep|poweroff|halt|reboot|kexec`
+- `loginctl suspend|hibernate|hybrid-sleep|poweroff|halt|reboot`
+- `pm-suspend`, `pm-hibernate`, `shutdown -h|-r|-P|now`
+- `dbus-send` / `busctl` calls to `org.freedesktop.login1.Manager.Suspend|Hibernate|PowerOff|Reboot|HybridSleep|SuspendThenHibernate`
+- `gsettings set ... sleep-inactive-{ac,battery}-type` to anything but `'nothing'` or `'blank'`
+
+The host runs mission-critical parallel CLI agents and container
+workloads. Auto-suspend has caused historical data loss (2026-04-26
+18:23:43 incident). The host is hardened (sleep targets masked) but
+this hard ban applies to ALL code shipped from this repo so that no
+future host or container is exposed.
+
+**Defence:** every project ships
+`scripts/host-power-management/check-no-suspend-calls.sh` (static
+scanner) and
+`challenges/scripts/no_suspend_calls_challenge.sh` (challenge wrapper).
+Both MUST be wired into the project's CI / `run_all_challenges.sh`.
+
+**Full background:** `docs/HOST_POWER_MANAGEMENT.md` and `CONSTITUTION.md` (CONST-033).
+
+<!-- END host-power-management addendum (CONST-033) -->
+
