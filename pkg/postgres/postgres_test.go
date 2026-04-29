@@ -129,6 +129,7 @@ func TestDefaultConfigValues(t *testing.T) {
 }
 
 func TestStopBeforeStartIsSafe(t *testing.T) {
+	// bluff-scan: nil-only-ok (lifecycle test — Stop() must not panic/error before Start())
 	t.Parallel()
 	cfg := DefaultConfig()
 	cfg.URL = "postgres://x@y/z"
@@ -140,6 +141,7 @@ func TestStopBeforeStartIsSafe(t *testing.T) {
 }
 
 func TestCloseBeforeAnythingIsSafe(t *testing.T) {
+	// bluff-scan: nil-only-ok (lifecycle test — Close() and double-Close() must not error)
 	t.Parallel()
 	cfg := DefaultConfig()
 	cfg.URL = "postgres://x@y/z"
