@@ -522,6 +522,7 @@ func TestClient_SpecialCharactersInKey(t *testing.T) {
 }
 
 func TestClient_ContextCancellation(t *testing.T) {
+	// bluff-scan: no-assert-ok (client lifecycle smoke — connect/context/stop must not panic)
 	_, client := setupMiniRedis(t)
 	defer client.Close()
 
