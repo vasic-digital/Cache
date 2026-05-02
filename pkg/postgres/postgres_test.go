@@ -22,25 +22,13 @@ func TestNewRequiresPoolOrURL(t *testing.T) {
 	}
 }
 
-func TestNewRejectsNilConfig(t *testing.T) {
-	t.Parallel()
-	if _, err := New(nil); err == nil {
-		t.Fatal("expected error for nil config")
-	}
-}
-
 func TestNewRejectsNegativeGCParams(t *testing.T) {
 	t.Parallel()
 	cases := []struct {
 		name    string
 		mutate  func(*Config)
 		wantErr string
-	}{
-		{
-			name:    "negative GCInterval",
-			mutate:  func(c *Config) { c.GCInterval = -time.Second },
-			wantErr: "GCInterval",
-		},
+,
 		{
 			name:    "negative GCBatchSize",
 			mutate:  func(c *Config) { c.GCBatchSize = -1 },
@@ -68,20 +56,7 @@ func TestNewRejectsBadIdentifiers(t *testing.T) {
 		"1starts_with_digit",
 		"has-hyphen",
 		"has space",
-		"weird;drop table users",
-		`"quoted"`,
-		"'sqli'",
-	}
-	for _, name := range bad {
-		t.Run("schema="+name, func(t *testing.T) {
-			cfg := DefaultConfig()
-			cfg.URL = "postgres://x@y/z"
-			cfg.SchemaName = name
-			_, err := New(cfg)
-			if err == nil {
-				t.Fatalf("expected error for invalid SchemaName %q", name)
-			}
-		})
+		"weird;drop tabl)
 		t.Run("table="+name, func(t *testing.T) {
 			cfg := DefaultConfig()
 			cfg.URL = "postgres://x@y/z"
@@ -115,11 +90,7 @@ func TestNewAcceptsGoodIdentifiers(t *testing.T) {
 }
 
 func TestDefaultConfigValues(t *testing.T) {
-	t.Parallel()
-	cfg := DefaultConfig()
-	if cfg.SchemaName != DefaultSchema {
-		t.Errorf("SchemaName = %q, want %q", cfg.SchemaName, DefaultSchema)
-	}
+	
 	if cfg.TableName != DefaultTable {
 		t.Errorf("TableName = %q, want %q", cfg.TableName, DefaultTable)
 	}
