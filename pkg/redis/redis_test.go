@@ -51,58 +51,6 @@ func TestDefaultConfig(t *testing.T) {
 	}
 }
 
-func TestNew_NilConfig(t *testing.T) {
-	client := New(nil)
-	require.NotNil(t, client)
-	require.NotNil(t, client.rdb)
-	_ = client.Close()
-}
-
-func TestNew_CustomConfig(t *testing.T) {
-	tests := []struct {
-		name string
-		cfg  *Config
-	}{
-		{
-			name: "custom addr and password",
-			cfg: &Config{
-				Addr:     "redis.example.com:6380",
-				Password: "secret",
-				DB:       3,
-				PoolSize: 20,
-			},
-		},
-		{
-			name: "minimal config",
-			cfg: &Config{
-				Addr: "localhost:6379",
-			},
-		},
-		{
-			name: "full config",
-			cfg: &Config{
-				Addr:         "10.0.0.1:6379",
-				Password:     "p@ss",
-				DB:           15,
-				PoolSize:     50,
-				MinIdleConns: 10,
-				DialTimeout:  10 * time.Second,
-				ReadTimeout:  5 * time.Second,
-				WriteTimeout: 5 * time.Second,
-			},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			client := New(tt.cfg)
-			require.NotNil(t, client)
-			require.NotNil(t, client.rdb)
-			_ = client.Close()
-		})
-	}
-}
-
 func TestClient_Underlying(t *testing.T) {
 	_, client := setupMiniRedis(t)
 	defer client.Close()

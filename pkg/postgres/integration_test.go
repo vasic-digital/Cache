@@ -25,7 +25,7 @@ func requireURL(t *testing.T) string {
 	t.Helper()
 	url := os.Getenv("POSTGRES_TEST_URL")
 	if url == "" {
-		t.Skip("POSTGRES_TEST_URL not set; run scripts/ci.sh which provisions a podman Postgres container, or export POSTGRES_TEST_URL=postgres://user:pass@host:port/db?sslmode=disable")  // SKIP-OK: #legacy-skip-untriaged-2026-04-29
+		t.Skip("POSTGRES_TEST_URL not set; run scripts/ci.sh which provisions a podman Postgres container, or export POSTGRES_TEST_URL=postgres://user:pass@host:port/db?sslmode=disable")
 	}
 	return url
 }
