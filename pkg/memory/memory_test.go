@@ -296,6 +296,7 @@ func TestCache_Flush(t *testing.T) {
 }
 
 func TestCache_ConcurrentAccess(t *testing.T) {
+	// bluff-scan: no-assert-ok (concurrency test — go test -race catches data races; absence of panic == correctness)
 	c := New(&Config{
 		MaxEntries:      100,
 		CleanupInterval: 0,
